@@ -1,0 +1,255 @@
+/* Partie utilisateur */
+/**
+ * The User entity.
+ */
+entity User {
+    matricule String required,
+	firstName String required,
+	lastName String required,
+	email String required,
+	phoneNumber String,
+    username String required,
+    password String required,
+    adresse String,
+    enLigne Boolean
+}
+/**
+ * The Photo entity.
+ */
+entity Photo {
+	libelle String,
+	data ImageBlob
+}
+/**
+ * The Role entity.
+ */
+entity Role {
+	libelle String required,
+	description String
+}
+/**
+ * The Fonction entity.
+ */
+entity Fonction {
+	libelle String required,
+	description String
+}
+/**
+ * The Privileges entity.
+ */
+entity Privileges {
+}
+/**
+ * The ActionPrivilege entity.
+ */
+entity ActionPrivilege {
+	alias String,
+	libelle String
+}
+/**
+ * The Entites entity.
+ * (Pour enregistrer la liste des class et pouvoir gérer les privileges)
+ */
+entity Entites {
+	name String,
+	libelleComplet String
+}
+
+// RELATIONS 
+relationship OneToOne {
+	User to Photo
+}
+
+relationship ManyToOne {
+	User to Fonction
+}
+relationship ManyToMany {
+	User to Role,
+    Privileges to ActionPrivilege,
+    Privileges to Entites
+}
+
+relationship OneToMany {
+	Role to Privileges
+}
+
+/* Partie PVs */
+
+/**
+ * The PV entity.
+ */
+entity Pv {
+	conteste Boolean,
+    motifConstestation String,
+    date LocalDate,
+    montant Double
+}
+/**
+ * The Fautif entity.
+ */
+entity Fautif {
+	firstName String,
+	lastName String,
+    numPermis String required,
+    dateDelivrancePermis String,
+    pays String
+}
+
+/**
+ * The Vehicule entity.
+ */
+entity Vehicule {
+	carteGrise String,
+    immatriculation String required,
+    marque String
+}
+/**
+ * The Vehicule entity.
+ */
+entity TypeVehicule {
+	alias String,
+    libelle String,
+    description String
+}
+
+/**
+ * The Piece entity.
+ */
+entity Piece {
+	image ImageBlob
+}
+/**
+ * The TypePiece entity.
+ */
+entity TypePiece {
+	libelle String,
+    aliasType String,
+    description String
+}
+
+/**
+ * The Operation entity.
+ */
+entity EtatPv {
+    alias String,
+    libelle String,
+    description String
+}
+
+/**
+ * The Infraction entity.
+ */
+entity Infraction {
+	libelle String,
+    description String,
+    montant Double
+}
+
+/**
+ * The Localisation entity.
+ */
+entity Localisation {
+    latitude String,
+    longitude String
+}
+/**
+ * The Facture entity.
+ */
+entity Facture {
+    numero String,
+    libelle String,
+    montant Double,
+    date LocalDate,
+    etatPaiement Boolean,
+    idPv Long
+}
+/**
+ * The Devise entity.
+ */
+entity Devise {
+    caractere String,
+    libelle String,
+    tauxDeChange Float
+}
+
+/**
+ * The Operation entity.
+ */
+entity Operation {
+    numero String,
+    montant Double,
+    date LocalDate
+}
+
+/**
+ * The Compte entity.
+ */
+entity Compte {
+    numero String,
+    solde Double
+}
+// RELATIONS
+relationship OneToMany {
+	Fautif to Pv,
+    Localisation to Pv,
+    Pv to Piece
+}
+relationship OneToOne {
+	Contestation to Pv,
+    Piece to TypePiece,
+    EtatPv to Pv
+}
+relationship ManyToMany {
+	Infraction to Pv
+}
+relationship ManyToOne{
+	Facture to Devise,
+    Operation to Facture,
+    Operation to Compte,
+    Vehicule to TypeVehicule,
+    Pv to Vehicule
+}
+
+// Autres Parties
+
+/**
+ * The Configuration entity.
+ */
+entity Configuration {
+	logo ImageBlob,
+    name String,
+    version String,
+    description String
+}
+
+/**
+ * The Sequences entity.
+ */
+entity Sequences {
+    prefixe String,
+    numSeq Integer,
+    sufixe String,
+    date LocalDate,
+}
+/**
+ * The AliasSequences entity.
+ * Pour ne pas faire libelle de Séquences directement,
+ * on peut prendre alias, et laisser l'admin modifier
+ * le libelle s'il le souhaite
+ */
+entity AliasSequences {
+    alias String,
+    libelle String
+}
+relationship OneToOne{
+	Sequences to AliasSequences
+}
+// Use Data Transfer Objects (DTO)
+// dto * with mapstruct
+
+// Set service options to all except few
+//service all with serviceImpl except Sequences, AliasSequences, 
+
+// Set an angular suffix
+// angularSuffix * with mySuffix
+
